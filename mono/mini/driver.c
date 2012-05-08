@@ -18,6 +18,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef FREEBSD
+#include <sys/capability.h>
+#endif
+
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/loader.h>
 #include <mono/metadata/tabledefs.h>
@@ -1010,6 +1014,16 @@ static void main_thread_handler (gpointer user_data)
 		if (main_args->opts & MONO_OPT_PRECOMP)
 			mono_precompile_assemblies ();
 
+#ifdef FREEBSD
+		if ( mono_caps)
+		{
+			//ENTER CAPS
+			fprintf (stdout, "begin caps enter\n");
+			cap_enter();
+			fprintf (stdout, "in the sandbox\n"); //fail ?
+		}
+#endif
+
 		mono_jit_exec (main_args->domain, assembly, main_args->argc, main_args->argv);
 	}
 }
@@ -1416,6 +1430,7 @@ mono_main (int argc, char* argv[])
 	int mixed_mode = FALSE;
 #endif
 
+
 #ifdef MOONLIGHT
 #ifndef HOST_WIN32
 	/* stdout defaults to block buffering if it's not writing to a terminal, which
@@ -1546,6 +1561,12 @@ mono_main (int argc, char* argv[])
 #ifdef HOST_WIN32
 		} else if (strcmp (argv [i], "--mixed-mode") == 0) {
 			mixed_mode = TRUE;
+#endif
+//only enable caps on freeBSD
+#ifdef FREEBSD
+		} else if (strcmp (argv [i], "--caps") == 0) {
+			fprintf (stdout, "mono_caps is true\n");
+			mono_caps = TRUE;
 #endif
 		} else if (strcmp (argv [i], "--ncompile") == 0) {
 			if (i + 1 >= argc){

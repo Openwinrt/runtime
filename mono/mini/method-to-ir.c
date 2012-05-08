@@ -61,6 +61,14 @@
 
 #include "ir-emit.h"
 
+#undef MONO_EMIT_BOUNDS_CHECK
+#define MONO_EMIT_BOUNDS_CHECK(cfg, array_reg, array_type, array_length_field, index_reg) do { \
+			(cfg)->flags |= MONO_CFG_HAS_ARRAY_ACCESS;					\
+			(cfg)->cbb->has_array_access = TRUE;						\
+    } while (0)
+
+#define MONO_ARCH_EMIT_BOUNDS_CHECK(cfg, array_reg, offset, index_reg) do { } while (0)
+
 #include "jit-icalls.h"
 #include "jit.h"
 #include "debugger-agent.h"

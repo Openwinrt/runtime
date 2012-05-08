@@ -78,7 +78,7 @@ mono_main_with_options (int argc, char *argv [])
 			
 			/* First the environment variable settings, to allow the command line options to override */
 			for (i = 0; i < array->len; i++)
-				new_argv [i+1] = g_ptr_array_index (array, i);
+				new_argv [i+1] = (char *) g_ptr_array_index (array, i);
 			i++;
 			for (j = 1; j < argc; j++)
 				new_argv [i++] = argv [j];

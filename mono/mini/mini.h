@@ -473,6 +473,7 @@ extern MonoTraceSpec *mono_jit_trace_calls;
 extern gboolean mono_break_on_exc;
 extern int mono_exc_esp_offset;
 extern gboolean mono_compile_aot;
+extern gboolean mono_caps;
 extern gboolean mono_aot_only;
 extern gboolean mono_use_imt;
 extern MonoMethodDesc *mono_inject_async_exc_method;
